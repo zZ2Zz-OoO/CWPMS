@@ -11,5 +11,4 @@ public class Manager {
     private Integer managerId;
     private String userName;
     private String password;
-    private String companyName;
 }

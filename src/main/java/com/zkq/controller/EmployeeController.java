@@ -2,10 +2,8 @@ package com.zkq.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zkq.pojo.Employee;
-import com.zkq.pojo.Manager;
 import com.zkq.pojo.Result;
 import com.zkq.service.EmployeeService;
-import com.zkq.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +20,8 @@ public class EmployeeController {
     @PostMapping("/login")
     public Result<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
 
-
-        String password = DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
+        //使用MD5密码加密
+        String pwd = DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
 
         QueryWrapper<Employee> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_name", employee.getUserName());
@@ -32,10 +30,10 @@ public class EmployeeController {
         if (one == null) {
             return Result.error("登录失败");
         }
-        if (!one.getPassword().equals(password)) {
+        if (!one.getPassword().equals(pwd)) {
             return Result.error("登陆失败");
         }
-
+        //添加session记录用户
         request.getSession().setAttribute("employee", one.getUserName());
         Employee employee1 = new Employee();
         employee1.setUserId(one.getUserId());
@@ -46,7 +44,7 @@ public class EmployeeController {
 
     @PostMapping
     public Result<String> addUser(@RequestBody Employee employee) {
-
+        //密码加密
         employee.setPassword(DigestUtils.md5DigestAsHex(employee.getPassword().getBytes()));
         service.save(employee);
         return Result.success("新增用户成功");
@@ -70,6 +68,9 @@ public class EmployeeController {
 
     @PutMapping
     public Result<String> update(@RequestBody Employee employee) {
+        String pwd=DigestUtils.md5DigestAsHex(employee.getPassword().getBytes());
+        employee.setPassword(pwd);
+
         boolean flag = service.updateById(employee);
         if (flag) {
             return Result.success("修改成功");
@@ -92,13 +93,14 @@ public class EmployeeController {
 
     @PostMapping("/logout")
     public Result<String> logout(HttpServletRequest request) {
+        //退出时清除session
         System.out.println(request.getSession().getAttribute("employee"));
         if (request.getSession().getAttribute("employee") == null) {
 
             return Result.error("请勿重复退出");
         }
         else {
-            request.getSession().removeAttribute("manager");
+            request.getSession().removeAttribute("employee");
             return Result.success("退出成功");
         }
     }

@@ -14,4 +14,5 @@ public class Plant {
     private String  plantType;
     private Integer price;
     private Integer advicePh;
+    private Integer quantity;
 }
