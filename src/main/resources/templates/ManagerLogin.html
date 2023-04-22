@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+
+        }
+        body{
+            background-color: rgb(165, 209, 181);
+        }
+
+        .input {
+            /*width: 100px;*/
+            line-height: 20px;
+            padding-bottom: 20px;
+            padding-left: 50px;
+        }
+
+        #username {
+            margin-top: 50px;
+        }
+
+        .container {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 300px;
+            width: 500px;
+            margin: auto;
+            box-shadow:  10px 10px rgba(0, 0, 0, .12), 0 0 10px rgba(0, 0, 0, .08);
+            background-color:rgb(248, 247, 240);
+            border-radius: 20px;
+        }
+
+        .tag {
+            display: inline-block;
+            width: 50px;
+            padding-left: 50px;
+            padding-bottom: 10px;
+        }
+
+        .btn {
+            width: 200px;
+            background-color: rgb(165, 209, 181)!important;
+        }
+        .btn:hover{
+            background-color: rgb(233, 187, 152)!important;
+
+        }
+
+        #btnLogin {
+            margin-left: 45px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <label id="root">
+        <span class="tag">用户名</span>
+
+        <el-input placeholder="请输入内容" v-model="username" clearable class="input" id="username" style="width: 300px"></el-input>
+        <br>
+        <span class="tag">密&nbsp;&nbsp;码</span>
+        <el-input placeholder="请输入密码" v-model="password" show-password class="input" style="width: 300px"></el-input>
+        <!--    <button id="btnLogin" type="submit" value="登录" @click="login"></button>-->
+        <br>
+        <el-button type="primary" round @click="managerlogin" id="btnLogin" class="btn">管理员登录</el-button>
+        <el-button type="primary" round @click="employeelogin" id="btnRegister" class="btn">员工注册</el-button>
+    </label>
+</div>
+<script src="/static/js/vue.js"></script>
+<!--<script type="module" src="/static/js/axios.min.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/element-ui/index.css">
+<script>
+    new Vue({
+        el: '#root',
+        data: {
+            username: '',
+            password: ''
+        },
+        methods: {
+            managerlogin() {
+                axios({
+                    method: 'post',
+                    url: "http://localhost:8080/managers/login",
+                    data: {
+                        userName: this.username,
+                        password: this.password
+                    }
+                }).then(res => {
+                    console.log(res.data)
+                    if (res.data.code === 1) {
+                        sessionStorage.setItem('manager', JSON.stringify(res.data.data))
+                        alert("登陆成功")
+                        window.location.href = '/templates/ManagerIndex.html'
+                    } else {
+                        alert(res.data.msg);
+                    }
+                })
+            },
+            employeelogin(){
+                axios({
+                    method: 'post',
+                    url: "http://localhost:8080/employees/login",
+                    data: {
+                        userName: this.username,
+                        password: this.password
+                    }
+                }).then(res => {
+                    console.log(res.data)
+                    if (res.data.code === 1) {
+                        sessionStorage.setItem('manager', JSON.stringify(res.data.data))
+                        alert("登陆成功")
+                        window.location.href = '/templates/EmployeeIndex.html'
+                    } else {
+                        alert(res.data.msg);
+                    }
+                })
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .el-header {
+            background-color: rgb(165, 209, 181);
+            color: #333;
+            /*text-align: center;*/
+            line-height: 60px;
+        }
+
+        .el-aside {
+            background-color: rgb(248, 247, 240);
+            color: #333;
+            /*text-align: center;*/
+            line-height: 600px;
+            height: 600px;
+        }
+
+        .el-main {
+            /*background-color: ;*/
+            color: #333;
+            /*text-align: center;*/
+            line-height: 80%;
+            background-color: rgb(248, 247, 240) !important;
+        }
+
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+
+        .el-menu {
+            background-color: rgb(248, 247, 240);
+        }
+
+        .el-menu-item:hover {
+            background: rgb(165, 209, 181) !important;
+        }
+    </style>
+</head>
+<body>
+<div id="root">
+    <el-container>
+        <el-header>欢迎用户&nbsp;{{ name }}
+
+            <el-button class="btn" @click="logout">
+                退出
+            </el-button></el-header>
+
+        <el-container>
+            <el-aside width="200px">
+                <el-menu :default-openeds="['1', '3']"
+                         background-color="rgb(248,247,240)">
+                    <el-menu-item @click="move1">植物管理</el-menu-item>
+                    <el-menu-item @click="move2">申请管理</el-menu-item>
+<!--                    <el-menu-item @click="move3">员工管理</el-menu-item>-->
+<!--                    <el-menu-item @click="move4">选项2</el-menu-item>-->
+                </el-menu>
+            </el-aside>
+            <el-main>
+                <el-table
+                        :data="plants"
+                        border
+                        style="width: 100%">
+                    <el-table-column
+                            fixed
+                            prop="plantId"
+                            label="植物Id"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="plantName"
+                            label="植物名称"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="plantType"
+                            label="植物种类"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="quantity"
+                            label="数量"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="price"
+                            label="单价/柱"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="advicePh"
+                            label="推荐种植环境"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            fixed="right"
+                            label="操作"
+                            width="100">
+                        <template slot-scope="scope">
+                            <el-button type="text" @click="handleUpdate(scope.row)">申请</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </el-main>
+        </el-container>
+    </el-container>
+    <el-dialog
+            title="修改社区信息"
+            :visible.sync="dialogVisible"
+            width="60%"
+            :before-close="handleClose">
+        <el-form ref="form" :model="form" label-width="100px">
+            <el-form-item label="植株名">
+                <el-input v-model="form.plantName"></el-input>
+            </el-form-item>
+            <el-form-item label="数量">
+                <el-input v-model="form.quantity"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit">提交</el-button>
+                <el-button @click="handleClose">取消</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
+</div>
+<script src="/static/js/vue.js"></script>
+<!--<script type="module" src="/static/js/axios.min.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/element-ui/index.css">
+<script>
+    new Vue({
+        el: "#root",
+        data() {
+            return {
+                plants: [],
+                dialogVisible: false,
+                dialogVisible4Add: false,
+                // userName1:this.sessionStorage.getItem("user"),
+                name: '',
+                form: {
+                    plantName: '',
+                    plantId: '',
+                    quantity: '',
+                    price: '',
+                    time: '',
+                    isAllowed: '',
+                    employeeName: ''
+                }
+            }
+        },
+        created() {
+            this.getAll()
+            this.getName()
+        },
+        methods: {
+            getAll() {
+                var _this = this;
+                axios({
+                    method: "get",
+                    url: "http://localhost:8080/plants"
+                }).then(res => {
+                    console.log(res.data.data)
+                    _this.plants = res.data.data;
+                })
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
+                    });
+            },
+            onSubmit() {
+                console.log(this.formData);
+                this.form.time = '2000-01-01'
+
+                axios({
+                    method: "post",
+                    url: "http://localhost:8080/applications",
+                    data: this.form
+                }).then(res => {
+                    if (res.data.code === 1) {
+                        alert("修改成功")
+                        this.dialogVisible = false
+                    } else {
+                        alert("修改失败")
+                    }
+                })
+            },
+            handleUpdate(row) {
+                this.dialogVisible = true
+                this.form.plantName = row.plantName
+                this.form.plantId = row.plantId
+                this.form.isAllowed = -1
+                this.form.employeeName = JSON.parse(sessionStorage.getItem('manager')).userName
+            },
+            getName() {
+                // console.log(sessionStorage.getItem('user'));
+                this.name = JSON.parse(sessionStorage.getItem('manager')).userName
+            },
+            logout(){
+                sessionStorage.removeItem('employee')
+                window.location.href="ManagerLogin.html"
+            },
+            move1() {
+                window.location.href = "EmployeePlant.html"
+            },
+            move2() {
+                window.location.href = "EmployeeApplication.html"
+            }
+            // move3() {
+            //     window.location.href = "ManagerEmployee.html"
+            // },
+            // move4() {
+            //
+            // }
+        }
+    })
+</script>
+</body>
+</html>
