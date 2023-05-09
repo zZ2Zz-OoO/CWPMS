@@ -78,7 +78,7 @@ public class ApplicationRecordController {
     public Result<String> update(@RequestBody ApplicationRecord applicationRecord) {
         boolean flag = service.updateById(applicationRecord);
         if (flag) {
-            return Result.success("批准成功");
+            return Result.success("操作成功");
         }
         else {
             return Result.error("批准失败");
