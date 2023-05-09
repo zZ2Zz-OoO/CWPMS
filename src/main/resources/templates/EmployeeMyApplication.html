@@ -39,8 +39,9 @@
         .el-menu {
             background-color: rgb(248, 247, 240);
         }
-        .el-menu-item:hover{
-            background:rgb(165, 209, 181)!important;
+
+        .el-menu-item:hover {
+            background: rgb(165, 209, 181) !important;
         }
     </style>
 </head>
@@ -58,8 +59,7 @@
                      background-color="rgb(248,247,240)">
                 <el-menu-item @click="move1">植物管理</el-menu-item>
                 <el-menu-item @click="move2">申请管理</el-menu-item>
-                <el-menu-item @click="move3">员工管理</el-menu-item>
-                <el-menu-item @click="move4">选项2</el-menu-item>
+                <el-menu-item @click="move3">我的申请</el-menu-item>
             </el-menu>
         </el-aside>
         <el-main>
@@ -94,12 +94,14 @@
                         width="120">
                 </el-table-column>
                 <el-table-column
-                        label="操作"
-                        width="100">
-                    <template slot-scope="scope">
-                        <el-button type="text" @click="allow(scope.row)">批准</el-button>
-                        <el-button type="text" @click="refuse(scope.row)">驳回</el-button>
-                    </template>
+                        prop="isAllowed"
+                        label="批准"
+                        width="120">
+                </el-table-column>
+                <el-table-column
+                        prop="isRefused"
+                        label="驳回"
+                        width="120">
                 </el-table-column>
             </el-table>
         </el-main>
@@ -115,16 +117,16 @@
         el: "#mainbody",
         data() {
             return {
-                applications:[],
-                application:{
-                    recordId:'',
-                    isAllowed:'',
-                    isRefused:'',
+                applications: [],
+                application: {
+                    recordId: '',
+                    isAllowed: '',
+                    isRefused: '',
                 },
-                name:''
+                name: ''
             }
         },
-        created(){
+        created() {
             this.getAll()
             this.getName()
         },
@@ -136,19 +138,28 @@
                 window.location.href = "ManagerApplication.html"
             },
             move3() {
-                window.location.href = "ManagerEmployee.html"
+                window.location.href = "EmployeeMyApplication.html"
             },
             move4() {
 
             },
             getAll() {
+                const employeeName=JSON.parse(sessionStorage.getItem('employee')).userName
+                console.log(employeeName);
                 var _this = this;
                 axios({
                     method: "get",
-                    url: "http://localhost:8080/applications/application"
+                    url:'http://localhost:8080/applications/application/'+employeeName
                 }).then(res => {
                     console.log(res.data.data)
                     _this.applications = res.data.data;
+                    // if (res.data.data.isAllowed===1){
+                    //     _this.applications.state="批准"
+                    // }else if (res.data.data.isRefused===1){
+                    //     _this.applications.state="驳回"
+                    // }else {
+                    //     _this.applications.state="未查看"
+                    // }
                 })
             },
             handleClose(done) {
@@ -159,43 +170,14 @@
                     .catch(_ => {
                     });
             },
-            allow(row){
-                this.application.isAllowed=1
-                this.application.isRefused=0
-                this.application.recordId=row.recordId
-                axios({
-                    method: 'put',
-                    url:'http://localhost:8080/applications/',
-                    data:this.application
-                }).then(res=>{
-                    if (res.data.code===1){
-                        alert(res.data.data)
-                        this.getAll()
-                    }
-                })
-            },
-            refuse(row){
-                this.application.isAllowed=0
-                this.application.isRefused=1
-                this.application.recordId=row.recordId
-                axios({
-                    method: 'put',
-                    url:'http://localhost:8080/applications/',
-                    data:this.application
-                }).then(res=>{
-                    if (res.data.code===1){
-                        alert(res.data.data)
-                        this.getAll()
-                    }
-                })
-            },
-            logout(){
+            logout() {
                 sessionStorage.removeItem('manager')
-                window.location.href="ManagerLogin.html"
+                window.location.href = "ManagerLogin.html"
             },
             getName() {
                 // console.log(sessionStorage.getItem('user'));
-                this.name = JSON.parse(sessionStorage.getItem('manager')).userName
+                this.name = JSON.parse(sessionStorage.getItem('employee')).userName
+                console.log(name);
             }
         }
     })

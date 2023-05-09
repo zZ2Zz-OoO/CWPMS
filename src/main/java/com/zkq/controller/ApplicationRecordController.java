@@ -1,5 +1,6 @@
 package com.zkq.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zkq.pojo.Result;
 import com.zkq.pojo.ApplicationRecord;
 import com.zkq.service.ApplicationRecordService;
@@ -16,13 +17,13 @@ public class ApplicationRecordController {
     private ApplicationRecordService service;
 
     @PostMapping
-    public Result<String> addServiceType(@RequestBody ApplicationRecord applicationRecord) {
+    public Result<String> addApplication(@RequestBody ApplicationRecord applicationRecord) {
         boolean save = service.save(applicationRecord);
         if (save) {
-            return Result.success("添加种类成功");
+            return Result.success("添加成功");
         }
         else {
-            return Result.error("添加种类失败");
+            return Result.error("添加失败");
         }
     }
 
@@ -46,9 +47,30 @@ public class ApplicationRecordController {
         return Result.error("无此种类");
     }
 
+    @GetMapping("/application")
+    public Result<List<ApplicationRecord>> getApplications() {
+        QueryWrapper<ApplicationRecord> QueryWrapper = new QueryWrapper<>();
+        QueryWrapper.eq("is_allowed","0")
+                    .eq("is_refused","0");
+
+        List<ApplicationRecord> records = service.list(QueryWrapper);
+        if (records==null){
+            return Result.error("暂无记录");
+        }
+        System.out.println(records);
+        return Result.success(records);
+    }
+
     @GetMapping
     public Result<List<ApplicationRecord>> getAll() {
         List<ApplicationRecord> applicationRecords = service.list();
+        return Result.success(applicationRecords);
+    }
+    @GetMapping("/application/{employee_name}")
+    public Result<List<ApplicationRecord>> getByEmployee(@PathVariable String employee_name) {
+        QueryWrapper<ApplicationRecord> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("employee_name",employee_name);
+        List<ApplicationRecord> applicationRecords = service.list(queryWrapper);
         return Result.success(applicationRecords);
     }
 
@@ -56,10 +78,10 @@ public class ApplicationRecordController {
     public Result<String> update(@RequestBody ApplicationRecord applicationRecord) {
         boolean flag = service.updateById(applicationRecord);
         if (flag) {
-            return Result.success("修改成功");
+            return Result.success("批准成功");
         }
         else {
-            return Result.error("修改失败");
+            return Result.error("批准失败");
         }
     }
 }

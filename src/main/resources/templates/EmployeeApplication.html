@@ -60,8 +60,7 @@
                          background-color="rgb(248,247,240)">
                     <el-menu-item @click="move1">植物管理</el-menu-item>
                     <el-menu-item @click="move2">申请管理</el-menu-item>
-<!--                    <el-menu-item @click="move3">员工管理</el-menu-item>-->
-<!--                    <el-menu-item @click="move4">选项2</el-menu-item>-->
+                    <el-menu-item @click="move3">我的申请</el-menu-item>
                 </el-menu>
             </el-aside>
             <el-main>
@@ -153,7 +152,8 @@
                     price: '',
                     time: '',
                     isAllowed: '',
-                    employeeName: ''
+                    employeeName: '',
+                    isRefused:''
                 }
             }
         },
@@ -183,6 +183,8 @@
             onSubmit() {
                 console.log(this.formData);
                 this.form.time = '2000-01-01'
+                this.form.isAllowed=0
+                this.form.isRefused=0
 
                 axios({
                     method: "post",
@@ -206,7 +208,7 @@
             },
             getName() {
                 // console.log(sessionStorage.getItem('user'));
-                this.name = JSON.parse(sessionStorage.getItem('manager')).userName
+                this.name = JSON.parse(sessionStorage.getItem('employee')).userName
             },
             logout(){
                 sessionStorage.removeItem('employee')
@@ -217,10 +219,10 @@
             },
             move2() {
                 window.location.href = "EmployeeApplication.html"
-            }
-            // move3() {
-            //     window.location.href = "ManagerEmployee.html"
-            // },
+            },
+            move3() {
+                window.location.href = "EmployeeMyApplication.html"
+            },
             // move4() {
             //
             // }

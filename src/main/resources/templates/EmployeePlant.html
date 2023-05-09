@@ -60,8 +60,7 @@
                          background-color="rgb(248,247,240)">
                     <el-menu-item @click="move1">植物管理</el-menu-item>
                     <el-menu-item @click="move2">申请管理</el-menu-item>
-<!--                    <el-menu-item @click="move3">员工管理</el-menu-item>-->
-<!--                    <el-menu-item @click="move4">选项2</el-menu-item>-->
+                    <el-menu-item @click="move3">我的申请</el-menu-item>
                 </el-menu>
             </el-aside>
             <el-main>
@@ -185,10 +184,10 @@
             },
             move2() {
                 window.location.href = "EmployeeApplication.html"
-            }
-            // move3() {
-            //     window.location.href = "ManagerEmployee.html"
-            // },
+            },
+            move3() {
+                window.location.href = "EmployeeMyApplication.html"
+            },
             // move4() {
             //
             // }
