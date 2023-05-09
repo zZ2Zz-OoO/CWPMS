@@ -14,6 +14,7 @@ public class ApplicationRecord {
     private String time;
     private String employeeName;
     private Integer isAllowed;
+    private Integer isRefused;
     private Integer quantity;
 
 }
