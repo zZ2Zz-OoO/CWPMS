@@ -123,7 +123,7 @@
             :before-close="handleClose">
         <el-form ref="form" :model="form" label-width="100px">
             <el-form-item label="植株Id">
-                <el-input v-model="form.plantId"></el-input>
+                <el-input v-model="form.plantId" disabled="true"></el-input>
             </el-form-item>
             <el-form-item label="植株名">
                 <el-input v-model="form.plantName"></el-input>
@@ -147,7 +147,7 @@
                 <el-input v-model="form.plantFunction"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSubmit()">添加</el-button>
+                <el-button type="primary" @click="onSubmit()">修改</el-button>
                 <el-button @click="handleClose">取消</el-button>
             </el-form-item>
         </el-form>
