@@ -67,7 +67,7 @@
                     <el-menu-item @click="move4">选项2</el-menu-item>
                 </el-menu>
             </el-aside>
-            <el-main> <el-button round @click="addUser" id="add" >添加植物</el-button>
+            <el-main> <el-button round @click="addPlant" id="add" >添加植物</el-button>
                 <el-table
                         :data="plants"
                         border
@@ -147,7 +147,7 @@
                 <el-input v-model="form.plantFunction"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">添加</el-button>
+                <el-button type="primary" @click="onSubmit()">添加</el-button>
                 <el-button @click="handleClose">取消</el-button>
             </el-form-item>
         </el-form>
@@ -158,9 +158,6 @@
             width="50%"
             :before-close="handleClose">
         <el-form ref="form" :model="form1" label-width="80px">
-                <el-form-item label="植物Id">
-                    <el-input v-model="form1.plantId"></el-input>
-                </el-form-item>
                 <el-form-item label="植物名">
                     <el-input v-model="form1.plantName"></el-input>
                 </el-form-item>
@@ -182,6 +179,10 @@
                 <el-form-item label="植物功能">
                     <el-input v-model="form1.plantFunction"></el-input>
                 </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onAdd">添加</el-button>
+                <el-button @click="handleClose">取消</el-button>
+            </el-form-item>
         </el-form>
     </el-dialog>
 </div>
@@ -275,7 +276,7 @@
                     }
                 })
             },
-            addUser() {
+            addPlant() {
                 this.dialogVisible4Add = true;
             },
             onAdd() {
