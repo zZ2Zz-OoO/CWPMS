@@ -34,7 +34,7 @@
         </el-table-column>
     </el-table>
     <el-dialog
-            title="修改社区信息"
+            title="修改信息"
             :visible.sync="dialogVisible"
             width="50%"
             :before-close="handleClose">
@@ -55,15 +55,15 @@
         </el-form>
     </el-dialog>
     <el-dialog
-            title="添加社区"
+            title="添加用户"
             :visible.sync="dialogVisible4Add"
             width="50%"
             :before-close="handleClose">
         <el-form ref="form" :model="form1" label-width="80px">
-            <el-form-item label="社区名">
+            <el-form-item label="用户名">
                 <el-input v-model="form1.userName"></el-input>
             </el-form-item>
-            <el-form-item label="社区简介">
+            <el-form-item label="密码">
                 <el-input v-model="form1.password"></el-input>
             </el-form-item>
             <el-form-item>
