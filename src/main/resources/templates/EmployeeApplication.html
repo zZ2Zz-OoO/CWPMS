@@ -52,7 +52,8 @@
 
             <el-button class="btn" @click="logout">
                 退出
-            </el-button></el-header>
+            </el-button>
+        </el-header>
 
         <el-container>
             <el-aside width="200px">
@@ -148,6 +149,7 @@
                 dialogVisible4Add: false,
                 // userName1:this.sessionStorage.getItem("user"),
                 name: '',
+                plantprice: '',
                 form: {
                     plantName: '',
                     plantId: '',
@@ -156,8 +158,8 @@
                     time: '',
                     isAllowed: '',
                     employeeName: '',
-                    isRefused:'',
-                    destination:''
+                    isRefused: '',
+                    destination: ''
                 }
             }
         },
@@ -166,6 +168,7 @@
             this.getName()
         },
         methods: {
+
             getAll() {
                 var _this = this;
                 axios({
@@ -185,12 +188,12 @@
                     });
             },
             onSubmit() {
-                console.log(this.formData);
                 this.form.time = '2000-01-01'
-                this.form.isAllowed=0
-                this.form.isRefused=0
-                this.form.employeeName=JSON.parse(sessionStorage.getItem("employee")).userName
-                console.log(JSON.parse(sessionStorage.getItem("employee")).userName);
+                this.form.isAllowed = 0
+                this.form.isRefused = 0
+                this.form.price = this.form.plantprice * this.form.quantity
+                console.log(this.form.price);
+                this.form.employeeName = JSON.parse(sessionStorage.getItem("employee")).userName
 
                 axios({
                     method: "post",
@@ -208,17 +211,21 @@
             handleUpdate(row) {
                 this.dialogVisible = true
                 this.form.plantName = row.plantName
+                this.form.plantprice = row.price
+                console.log(this.form.plantprice);
                 this.form.plantId = row.plantId
                 this.form.isAllowed = -1
-                this.form.employeeName = JSON.parse(sessionStorage.getItem('manager')).userName
+                this.form.employeeName = JSON.parse(sessionStorage.getItem('employee')).userName
+
             },
+
             getName() {
                 // console.log(sessionStorage.getItem('user'));
                 this.name = JSON.parse(sessionStorage.getItem('employee')).userName
             },
-            logout(){
+            logout() {
                 sessionStorage.removeItem('employee')
-                window.location.href="ManagerLogin.html"
+                window.location.href = "ManagerLogin.html"
             },
             move1() {
                 window.location.href = "EmployeePlant.html"

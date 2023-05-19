@@ -71,7 +71,7 @@
                     <el-menu-item @click="move1">植物管理</el-menu-item>
                     <el-menu-item @click="move2">申请管理</el-menu-item>
                     <el-menu-item @click="move3">员工管理</el-menu-item>
-                    <el-menu-item @click="move4">选项2</el-menu-item>
+                    <el-menu-item @click="move4">运单管理</el-menu-item>
                 </el-menu>
             </el-aside>
             <el-main>
@@ -172,9 +172,6 @@
             <el-form-item label="邮箱">
                 <el-input v-model="form1.email"></el-input>
             </el-form-item>
-            <el-form-item label="入职时间">
-                <el-input v-model="form1.createTime"></el-input>
-            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onAdd">添加</el-button>
                 <el-button @click="handleClose">取消</el-button>
@@ -217,6 +214,7 @@
         created() {
             this.getAll()
             this.getName()
+            this.getdate()
         },
         methods: {
             getAll() {
@@ -272,6 +270,7 @@
                 this.dialogVisible4Add = true;
             },
             onAdd() {
+                console.log(this.form1.createTime);
                 axios({
                     method: "post",
                     url: "http://localhost:8080/employees",
@@ -314,12 +313,26 @@
                 window.location.href = "ManagerEmployee.html"
             },
             move4() {
+                window.location.href="ManagerProfit.html"
 
             },
             logout(){
                 sessionStorage.removeItem('manager')
                 window.location.href="ManagerLogin.html"
-            }
+            },
+            getdate() {
+                //获取当前时间并打印
+                var _this = this;
+                let yy = new Date().getFullYear();
+                let mm = new Date().getMonth() + 1;
+                let dd = new Date().getDate();
+                let hh = new Date().getHours();
+                let mf = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
+                let ss = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
+                _this.gettime = yy + '-' + mm + '-' + dd + ' ' + hh + ':' + mf + ':' + ss;
+                this.form1.createTime = _this.gettime
+                console.log(this.form1.createTime);
+            },
         }
     })
 </script>

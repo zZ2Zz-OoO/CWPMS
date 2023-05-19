@@ -5,17 +5,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 @Data
-public class Order {
+public class Orders {
     @TableId(value = "order_id",type = IdType.ASSIGN_ID)
     private Integer orderId;
-    private Integer plantId;
+    private String employeeName;
     private String orderTime;
-    private Integer orderStatus;
-    private Integer deliveryStatus;
-    private Integer courierNumber;
+    private Integer recordId;
     private Integer managerId;
-    private Integer userId;
     private String phone;
-    private String address;
+    private String destination;
     private double totalPrice;
+    private String plantName;
 }

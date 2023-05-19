@@ -59,7 +59,7 @@
                 <el-menu-item @click="move1">植物管理</el-menu-item>
                 <el-menu-item @click="move2">申请管理</el-menu-item>
                 <el-menu-item @click="move3">员工管理</el-menu-item>
-                <el-menu-item @click="move4">选项2</el-menu-item>
+                <el-menu-item @click="move4">运单管理</el-menu-item>
             </el-menu>
         </el-aside>
         <el-main>
@@ -86,6 +86,16 @@
                 <el-table-column
                         prop="quantity"
                         label="数量"
+                        width="120">
+                </el-table-column>
+                <el-table-column
+                        prop="time"
+                        label="申请时间"
+                        width="120">
+                </el-table-column>
+                <el-table-column
+                        prop="price"
+                        label="总价"
                         width="120">
                 </el-table-column>
                 <el-table-column
@@ -121,12 +131,24 @@
                     isAllowed:'',
                     isRefused:'',
                 },
-                name:''
+                name:'',
+                orders:{
+                    orderId:'',
+                    orderTime:'',
+                    recordId:'',
+                    managerId: '',
+                    employeeName:'',
+                    phone:'',
+                    destination:'',
+                    totalPrice:'',
+                    plantName:''
+                }
             }
         },
         created(){
             this.getAll()
             this.getName()
+            this.getdate()
         },
         methods: {
             move1() {
@@ -139,6 +161,7 @@
                 window.location.href = "ManagerEmployee.html"
             },
             move4() {
+                window.location.href="ManagerProfit.html"
 
             },
             getAll() {
@@ -163,6 +186,7 @@
                 this.application.isAllowed=1
                 this.application.isRefused=0
                 this.application.recordId=row.recordId
+                console.log(this.applications);
                 axios({
                     method: 'put',
                     url:'http://localhost:8080/applications/',
@@ -171,6 +195,25 @@
                     if (res.data.code===1){
                         alert(res.data.data)
                         this.getAll()
+                    }
+                })
+                this.orders.orderId=row.orderId
+                this.orders.recordId=row.recordId
+                this.orders.managerId=JSON.parse(sessionStorage.getItem('manager')).managerId
+                this.orders.employeeName=row.employeeName
+                this.orders.phone=123456789
+                this.orders.destination=row.destination
+                this.orders.totalPrice=row.price
+                this.orders.plantName=row.plantName
+                axios({
+                    method:'post',
+                    url:'http://localhost:8080/orders',
+                    data:this.orders
+                }).then(res=>{
+                    if (res.data.code === 1) {
+                        alert("成功")
+                    }else {
+                        alert("失败")
                     }
                 })
             },
@@ -196,7 +239,20 @@
             getName() {
                 // console.log(sessionStorage.getItem('user'));
                 this.name = JSON.parse(sessionStorage.getItem('manager')).userName
-            }
+            },
+            getdate() {
+                //获取当前时间并打印
+                var _this = this;
+                let yy = new Date().getFullYear();
+                let mm = new Date().getMonth() + 1;
+                let dd = new Date().getDate();
+                let hh = new Date().getHours();
+                let mf = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes();
+                let ss = new Date().getSeconds() < 10 ? '0' + new Date().getSeconds() : new Date().getSeconds();
+                _this.gettime = yy + '-' + mm + '-' + dd + ' ' + hh + ':' + mf + ':' + ss;
+                console.log(_this.gettime);
+                this.orders.orderTime = _this.gettime
+            },
         }
     })
 </script>

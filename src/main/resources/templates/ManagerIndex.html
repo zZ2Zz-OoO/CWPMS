@@ -57,7 +57,7 @@
                 <el-menu-item @click="move1">植物管理</el-menu-item>
                 <el-menu-item @click="move2">申请管理</el-menu-item>
                 <el-menu-item @click="move3">员工管理</el-menu-item>
-                <el-menu-item @click="move4">选项2</el-menu-item>
+                <el-menu-item @click="move4">运单管理</el-menu-item>
             </el-menu>
         </el-aside>
         <el-main></el-main>
@@ -90,6 +90,7 @@
                 window.location.href = "ManagerEmployee.html"
             },
             move4() {
+                window.location.href="ManagerProfit.html"
 
             },
             getName() {
@@ -99,7 +100,8 @@
             logout(){
                 sessionStorage.removeItem('manager')
                 window.location.href="ManagerLogin.html"
-            }
+            },
+
         }
     })
 </script>

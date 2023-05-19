@@ -18,5 +18,4 @@ public class ApplicationRecord {
     private Integer isRefused;
     private Integer quantity;
     private String destination;
-    private String userName;
 }
