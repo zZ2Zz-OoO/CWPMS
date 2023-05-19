@@ -123,6 +123,9 @@
             <el-form-item label="数量">
                 <el-input v-model="form.quantity"></el-input>
             </el-form-item>
+            <el-form-item label="目的地">
+                <el-input v-model="form.destination"></el-input>
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">提交</el-button>
                 <el-button @click="handleClose">取消</el-button>
@@ -153,7 +156,8 @@
                     time: '',
                     isAllowed: '',
                     employeeName: '',
-                    isRefused:''
+                    isRefused:'',
+                    destination:''
                 }
             }
         },
@@ -185,6 +189,8 @@
                 this.form.time = '2000-01-01'
                 this.form.isAllowed=0
                 this.form.isRefused=0
+                this.form.employeeName=JSON.parse(sessionStorage.getItem("employee")).userName
+                console.log(JSON.parse(sessionStorage.getItem("employee")).userName);
 
                 axios({
                     method: "post",
